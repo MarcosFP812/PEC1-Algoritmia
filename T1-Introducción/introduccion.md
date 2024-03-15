@@ -64,13 +64,13 @@ def es_primo(n):
     siendo n el numero a identificar
     """
     
-    if n < 2:                             +1
-        return False                      +1
+    if n < 2:                             #+1
+        return False                      #+1
 
-    for i in range(2, int(n**0.5) + 1):      sumatorio(   
-        if n % i == 0:                       +1
-            return False                     +1)
-    return True                           +1
+    for i in range(2, int(n**0.5) + 1):      #sumatorio(   
+        if n % i == 0:                       #+1
+            return False                     #+1)
+    return True                           #+1
 ```
 
 Por lo que observamos que el tiempo de ejecución en función de n es:
@@ -88,16 +88,20 @@ $O({\sqrt{n}})$
 
 ### Suma recursiva
 
+Consiste ne crear una función recursiva que devuleva el sumatorio de n desde 1 hasta n, tal que:
 
+$S = \sum\limits_{i=0}^{n} (i) = 1+2+3+...+n-2+n-1+n$
+
+Es un algoritmo muy simple puesto que usaremos como parámetros el número n y el resultado, en la recursión la condición de parada será cuando n = 0 y la llamada recursiva se realizará decrementando en 1 la n y sumando dicho valor de n al resultado, así se realizará hasta que llegue a n = 0 y devuelva el resultado.
 
 ```python= 
 def sumaR(n, resultado = 0):
-    if n =< 0:                          +1
+    if n =< 0:                          #+1
         return resultado                
     else:
-        return sumaR(n-1, resultado+n)  T(n-1)
+        return sumaR(n-1, resultado+n)  #T(n-1)
 ```
-
+La ecuación de recurrencia será:
 $T(n) = 1 + T(n-1)$
 
 $T(n) - T(n-1) = 1$
