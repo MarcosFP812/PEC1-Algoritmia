@@ -51,6 +51,40 @@ A continuación realizaremos un algoritmos, para su posterior análisis, que det
 Un número primo es un número natural mayor que 1 que solo es divisible por sí mismo y por 1. En otras palabras, un número primo es aquel que tiene exactamente dos divisores positivos: 1 y el propio número. Por ejemplo, los primeros números primos son 2, 3, 5, 7, 11, 13, 17, etc.
 Por lo que al introducir alguno de los anteriores valores al algoritmo deberemos de obtener una respuesta afirmativa.
 
-El algoritmo que decidiremos usar es muy simple, dado n, consiste en realizar el resto de n y de los valores que van desde 2 hasta n/2 uno a uno, en caso de que alguno de estos restos de 0, significa que ese valor es divisor de n por lo que no es primo, así que saldremos del bucle y concluiremos.
-Cabe destacar que este 
+El algoritmo que decidiremos usar es muy simple, dado n, consiste en realizar el resto de n y de los valores que van desde 2 hasta n**0,5 uno a uno, en caso de que alguno de estos restos de 0, significa que ese valor es divisor de n por lo que no es primo, así que saldremos del bucle y concluiremos. Si completa el bucle entero siginifica que es primo.
+Cabe destacar que este no es el algoritmo mas eficiente que se puede usar para solucionar este problema, pero es suficiente para un inicio.
+
+Ahora analizaremos la eficiencia del algoritmo:
+
+```python=
+def es_primo(n):
+    """
+    es_primo ::[int] -> [bool]
+    Indica si un numero es primo o no
+    siendo n el numero a identificar
+    """
+    
+    if n < 2:                             +1
+        return False                      +1
+
+    for i in range(2, int(n**0.5) + 1):      sumatorio(   
+        if n % i == 0:                       +1
+            return False                     +1)
+    return True                           +1
+```
+
+Por lo que observamos que el tiempo de ejecución en función de n es:
+
+T(n) = $2 + \sum\limits_{i=2}^{\sqrt{n}} (2)$
+
+Como estamos en notación asintótica podemos obviar que el bucle inicia en i=2, ya que con un n muy grande lo que aportan dichas iteraciones al tiempo de ejecución es despreciable.
+Por lo que:
+
+T(n) = $3 + \sum\limits_{i=0}^{\sqrt{n}} (2)$ = $3 + 2*\sqrt{n}$
+
+En base a este tiempo de ejecución podemos concluir que la complejidad de este algoritmo es:
+
+O(${\sqrt{n}$)
+
+
 
