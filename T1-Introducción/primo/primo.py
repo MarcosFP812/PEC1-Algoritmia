@@ -6,25 +6,14 @@ def es_primo(n):
     Indica si un numero es primo o no
     siendo n el numero a identificar
     """
-
-    if n < 2:
-        return False
-    for i in range(2, int(n**0.5) + 1):
-        if n % i == 0:
-            return False
-    return True
-
-
-def es_primoR(num, n=2):
-    if n >= num:
-        print("Es primo")
-        return True
-    elif num % n != 0:
-        return es_primo(num, n + 1)
-    else:
-        print("No es primo", n, "es divisor")
-        return False
     
+    if n < 2:                              #Evaluamos a los menores a 2 como no primos 
+        return False
+    for i in range(2, int(n**0.5) + 1):    #Bucle hasta la raiz de n
+        if n % i == 0:
+            return False                   #No es primo si es divisible
+    return True                            #Es primo
+
 def main():
     """
         main :: [String] -> None
@@ -38,7 +27,6 @@ def main():
         print(es_primo(n))
     except:
         print("Error")
-    return None
 
 if __name__ == "__main__":                                                      # Si este modulo es el principal 
     if '--test' in sys.argv:                                                    # Entonces si existe "--test" en la linea de argumentos
