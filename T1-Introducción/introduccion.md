@@ -75,16 +75,47 @@ def es_primo(n):
 
 Por lo que observamos que el tiempo de ejecución en función de n es:
 
-T(n) = $2 + \sum\limits_{i=2}^{\sqrt{n}} (2)$
+$T(n) = 2 + \sum\limits_{i=2}^{\sqrt{n}} (2)$
 
 Como estamos en notación asintótica podemos obviar que el bucle inicia en i=2, ya que con un n muy grande lo que aportan dichas iteraciones al tiempo de ejecución es despreciable.
 Por lo que:
 
-T(n) = $3 + \sum\limits_{i=0}^{\sqrt{n}} (2)$ = $3 + 2*\sqrt{n}$
+$T(n) = 3 + \sum\limits_{i=0}^{\sqrt{n}} (2)$ = $3 + 2*\sqrt{n}$
 
 En base a este tiempo de ejecución podemos concluir que la complejidad de este algoritmo es:
 
-O(${\sqrt{n}$)
+$O({\sqrt{n}})$
+
+### Suma recursiva
+
+
+
+```python= 
+def sumaR(n, resultado = 0):
+    if n =< 0:                          +1
+        return resultado                
+    else:
+        return sumaR(n-1, resultado+n)  T(n-1)
+```
+
+$T(n) = 1 + T(n-1)$
+
+$T(n) - T(n-1) = 1$
+
+$x^n - x^{n-1} = 1$
+
+Ecuación recursiva homogénea:
+
+$x^{(H)} = x^n - x^{n-1} = 0 = x^{n-1}(x-1)$
+
+La raíz es x = 1. Por lo que:
+
+$x^{(H)} = A$
+
+Ecuación particular:
+$x^{(P)} = x^n - x^{n-1} = 1 = x^{n-1}(x-1)$
+
+
 
 
 
