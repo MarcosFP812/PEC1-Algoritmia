@@ -11,6 +11,22 @@ Aunque son eficientes y fáciles de diseñar, no todos los problemas pueden reso
 El esquema general del algoritmo voraz es:
 
 ```python=
-func voraz(candidatos)
+func voraz(Candidatos):
   Solucion = []
+  mientras haya Candidatos y no Solucionado(Solucion)
+    x=mejor(candidatos)
+    si x entra en solucion
+      Añadir x a solucion
+    eliminar x de candidatos
+  devolver solucion
 ```
+
+
+## Ejercicios
+
+### Cinta Magnética
+
+Se tiene que almacenar un conjunto de n ficheros en una cinta magnética (soporte de almacenamiento de recorrido secuencial), teniendo cada fichero una longitud conocida l1, l2, …, ln. Para simplificar el problema, puede suponerse que la velocidad de lectura es constante, así como la densidad de información en la cinta.
+Se conoce de antemano la tasa de utilización de cada fichero almacenado, es decir, se sabe la cantidad de peticiones pi correspondiente al fichero i que se van a realizar. Por
+tanto, el total de peticiones al soporte será la cantidad $P = \sum\limits_{i=2}^{n} (pi)$ . Tras la petición de un fichero, al ser encontrado la cinta es automáticamente rebobinada hasta el comienzo de la misma.
+El objetivo es decidir el orden en que los n ficheros deben ser almacenados para que se minimice el tiempo medio de carga, creando un algoritmo voraz correcto.
