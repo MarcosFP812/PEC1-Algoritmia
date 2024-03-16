@@ -116,5 +116,109 @@ $T(n) = 5 + \sum\limits_{i=0}^{n} (7 + 3n + \sum\limits_{i=0}^{n}(4)) = 5 + \sum
 
 Por lo que la complejidad será $O(n^2)$
 
+### Algoritmo de Dijkstra
+
+Se tiene un grafo dirigido G = < N, A >, siendo N = {1, …, n} el conjunto de nodos y A ⊆ NxN el conjunto de aristas. Cada arista (i, j) ∈ A tiene un coste asociado cij (cij > 0 ∀i, j ∈ N; si (i, j) ∉ A puede considerarse cij = +∞). Sea M la matriz de costes del grafo G, es decir, M [i, j] = cij.
+Teniendo como datos la cantidad de nodos n y la matriz de costes M, se pide encontrar tanto el camino mínimo entre los nodos 1 y n como la longitud de dicho camino usando el algoritmo de Dijkstra, utilizando las siguientes ideas:
+- Crear un estructura de datos que almacene las distancias temporales conocidas (inicializadas al coste de la arista del vértice 1 a cada vértice j, o +∞ si no existe
+dicha arista) para los vértices no recorridos (inicialmente, todos salvo el 1).
+- Seleccionar como candidato el que tenga menor distancia temporal conocida, eliminarle del conjunto de vértices no recorridos, y actualizar el resto de distancias temporales si pueden ser mejoradas utilizando el vértice actual.
+- Se necesitará almacenar de alguna manera la forma de recorrer el grafo desde el vértice 1 al vértice n (no necesariamente igual al conjunto de decisiones tomadas).
+
+#### Estructura
+
+Para este apartado para mejorar la estructiración de la práctica se ha utilizado un paradigma estructural orientado a objetos, con 3 clases principales `Vertices`, `Aristas` y `Grafo`, aquí se aporta el código de cada una de ellas:
+
+```python= 
+class Arista():
+    def __init__(self, o, d, v) -> None:
+        self.origen = o
+        self.destino = d
+        self.valor = v
+        self.recorrida = False
+    
+    def __str__(self) -> str:
+        return f"Arista {self.origen}-{self.destino}:{self.valor}"
+
+class Vertice():
+    def __init__(self, n, d=float('inf')) -> None:
+        self.nombre = n
+        self.distancia = d
+        self.recorrido = []
+
+    def usado(self):
+        return self.distancia != float("inf")
+
+class Grafo():
+    def __init__(self, aristas) -> None:
+        self.aristas = aristas
+        self.vertices = self.iniciar_vertices()
+
+    def iniciar_vertices(self):
+        v = []
+        def nombre_in_vertices(vertices, nombre):
+            for v in vertices:
+                if v.nombre == nombre:
+                    return True
+            return False
+    
+        for a in self.aristas:
+            if not nombre_in_vertices(v, a.origen):
+                v.append(Vertice(a.origen))
+            if not nombre_in_vertices(v, a.destino):
+                v.append(Vertice(a.destino))
+        return v
+    
+    def mejor_arista(self):
+        mejor = Arista("test", "test", float("inf"))
+        for v in self.vertices:
+            for a in self.aristas:
+                if v.usado() and not a.recorrida and a.origen == v.nombre and a.valor < mejor.valor:
+                    mejor = a 
+        mejor.recorrida = True
+        return mejor
+    
+    def buscar_vertice(self, nombre):
+        for v in self.vertices:
+            if (nombre==v.nombre):
+                return v
+
+    def aristas_recorridas(self):
+        for a in self.aristas:
+            if not a.recorrida:
+                return False
+        return True
+
+    def set_vertice(self, nombre, d, camino_origen=[]):
+        v = self.buscar_vertice(nombre)
+        v.distancia = d
+        v.recorrido = camino_origen
+        v.recorrido += nombre
+
+    def dijkstra_voraz(self, inicio):
+        #Iniciar el primer vértice
+        self.set_vertice(inicio, 0)              
+
+        while(not self.aristas_recorridas()):
+            #Funcion de seleccion
+            a = self.mejor_arista()
+
+            v_origen = self.buscar_vertice(a.origen)
+            rec = v_origen.recorrido[:]
+            v_destino = self.buscar_vertice(a.destino)
+
+            nueva_distancia = v_origen.distancia + a.valor
+
+            if nueva_distancia < v_destino.distancia:
+                self.set_vertice(v_destino.nombre, nueva_distancia, rec)
+            
+```
+
+Los vertices serán las estructuras que guardarán la distancia y el recorrido necesario para llegar desde el primer vértice, en cuanto a las aristas tendran 2 vertices (origen y destino), se sabrá si están o no recorridas por uno de sus atributos y también tendrá un valor que indica la distancia entre vertices. Finalmente tenemos la clase principal que se llama Grafo, este tiene un conjunto de vértices que deberán ser inicializados en base a las aristas que se le aporten.
+
+
+
+
+
 
 
