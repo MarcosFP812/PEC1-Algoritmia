@@ -10,7 +10,7 @@ Aunque son eficientes y fáciles de diseñar, no todos los problemas pueden reso
 
 El esquema general del algoritmo voraz es:
 
-```python=
+```python
 func voraz(Candidatos):
   Solucion = []
   mientras haya Candidatos y no Solucionado(Solucion)
@@ -32,7 +32,7 @@ tanto, el total de peticiones al soporte será la cantidad $P = \sum\limits_{i=2
 El objetivo es decidir el orden en que los n ficheros deben ser almacenados para que se minimice el tiempo medio de carga, creando un algoritmo voraz correcto.
 
 Se propone el siguiente código:
-```python=
+```python
 def leer(d, mejor):
     datos = d[:]       #+1
     datos_leer = []    #+1
@@ -75,7 +75,7 @@ La lógica sobre la lectura de los ficheros se realiza en la última parte del b
 Aquí está la complicación de este tipo de algoritmos, y es elegir cual será la manera en el que elegiremos el mejor elemento de los candidatos para que entre en la solución. Para ello deberemos de analizar los parámetros relevantes a la hora de la selección, los cuales son los atributos del Fichero, `longitud` y `peticiones`. 
 
 Razonando podemos pensar que queremos primero debemos seleccionar los ficheros con menor longitud, puesto que si los primeros se leeran una gran cantidad de iteraciones conviene que su aportación al tiempo total sea la minima posible. De este razonamiento podemos suponer la siguiente funcion:
-```python=
+```python
 def mejor_long(datos):
     primero = datos[0]
     for i in range(1, len(datos)):
@@ -84,7 +84,7 @@ def mejor_long(datos):
     return primero
 ```
 Sin embargo esta solución es incompleta, puesto que es posible que aunque tenga un tamaño pequeño puede que sus peticiones sean también pocas por lo que se estará iterando con 0 peticiones una gran cantidad de veces, lo que significa que se está perdiendp tiempo en un fichero ya leido. Recordemos que el objetivo es no malgastar lecturas en primera instancia. Así pues obtenemos la siguiente función:
-```python=
+```python
 def mejor_pet(datos):
     primero = datos[0]
     for i in range(1, len(datos)):
@@ -94,7 +94,7 @@ def mejor_pet(datos):
 ```
 Pero con esta aproximación no tenemos en cuenta la longitud por lo que a igualdad de numero de peticiones no hay ninguna forma de discriminar el que tenga menor longitud, puesto que sería lo más eficiente. Así pues debemos de buscar una relación entre ambos valores, la cual puede ser un producto o un cociente.
 Respecto al producto no será la opción más óptima por motivos parecidos al de la longitud, por lo que el mayor cociente entre peticiones y longitud será la mejor opción, ya que si tienen una longitud grande, el cociente será menor, por lo que según el criterio se encolarán al final. En caso de ser muy demandante de peticiones su cociente será mayor y por lo tanto mejor colocarlo de los primeros. De esta forma sería el código:
-```python= 
+```python 
 def mejor_div(datos):
     primero = datos[0]   
     for i in range(1, len(datos)):
@@ -129,7 +129,7 @@ dicha arista) para los vértices no recorridos (inicialmente, todos salvo el 1).
 
 Para este apartado para mejorar la estructiración de la práctica se ha utilizado un paradigma estructural orientado a objetos, con 3 clases principales `Vertices`, `Aristas` y `Grafo`, aquí se aporta el código de cada una de ellas:
 
-```python= 
+```python
 class Arista():
     def __init__(self, o, d, v) -> None:
         self.origen = o
@@ -215,6 +215,21 @@ class Grafo():
 ```
 
 Los vertices serán las estructuras que guardarán la distancia y el recorrido necesario para llegar desde el primer vértice, en cuanto a las aristas tendran 2 vertices (origen y destino), se sabrá si están o no recorridas por uno de sus atributos y también tendrá un valor que indica la distancia entre vertices. Finalmente tenemos la clase principal que se llama Grafo, este tiene un conjunto de vértices que deberán ser inicializados en base a las aristas que se le aporten.
+
+En cuanto al funcionamiento del algoritmo expliquemos algunas de las funciones accesorio a `dijkstra_voraz`:
+
+- **`iniciar_vertices(self)`** Es una función que se aplica en el constructor de la clase, su función esencialmente es transformar el grafo de aristas dado en los vértices necesarios, inicializados todos con unha distancia de &infin;, su complejidad es de $O(n^2)$, ya que consta de un doble bucle for.
+- **`buscar_vertice(self, nombre)`**: Devuelve el vértice que tenga el nombre solicitado mediante una búsqueda secuencial. La complejidad es de $O(n)$.
+- **`aristas_recorridas(self)`**: Devuelve True si todas las aristas del grafo han sido recorridas, False en caso contrario. La complejidad es de $O(n)$.
+- **`mejor_arista(self)`**: Es la función de selección devulve la arista con menor tamaño que haya en la lista de aristas, las condiciones para que esto ocurra son que el vértice que se está evaluando esté usado (significa que su distancia no sea &infin;, es decir que haya alguna forma de llegar a el) y que la arista no haya sido recorrida. Se la arista cuyo valor sea el menor y se devuelve colocandola como recorrida. El coste es $O(n^2)$ por tener un doble bucle for, sin embargo uno iterara sobre los vértices y otro sobre las aristas, por lo que esta complejidad variará en caso de ser un grafo denso o disperso.
+- **`set_vertice(self, nombre, d, camino_origen=[])`**: Cambia los valores de un vértice indicado, tanto la distancia para llegar a él, como el recorrido necesario. Tiene la misma complejidad que `buscar_vertice(self, nombre)`
+
+Una vez vistas estas funciones podemos entrar en la **`dijkstra_voraz(self, inicio)`**, aquí contamos con el grupo de aristas candidatas y un valor de inicio el cual se colocará dicho vértice con distancia 0 y un camino nulo, posteriormente comenzará un el bucle voraz el cual no terminará hasta que se recorran todas las aristas (Destacar que todas las aristas deben de estar interconectadas sino será un bucle infinito). Se elegirá la mejor arista, recordemos que cada arista tiene un origen y un destino, por lo que se tomará el vertice origen para calcular la nueva distancia y recorrido del vértice destino, posteriormente se comprobará si esa distancia es menor que la existente y si es así se colocará en la lista de vértices.
+La complejidad total del algoritmo será $O(n^3)$, puesto que la función de selección es $O(n^2)$ la cual está dentro de un bucle while.
+
+
+
+
 
 
 
