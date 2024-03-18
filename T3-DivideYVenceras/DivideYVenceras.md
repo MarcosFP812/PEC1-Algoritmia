@@ -127,3 +127,150 @@ En caso de que sea el puntop medio del intervalo el valor que buscamos se añadi
 
 
 
+### Abecelandia
+
+En Abecelandia, ciudad famosa por sus N bellas plazas y que puede que conozcas, tienen un curioso sistema de carreteras: desde cada plaza sale una calle a todas las otras plazas que comienzan con una letra que se encuentre en su nombre (por ejemplo, de la plaza Aro salen calles que llevan a las plazas que empiezan por R, como las plaza Ruido y Reto, o por O, como la plaza Osa, pero no salen calles a plazas como Duende, Cascada o Tiara). Las calles son de sentido único (de la plaza Aro se puede ir a la plaza Ruido, pero no al
+revés ya que no cumple la regla de las letras; obviamente, otras plazas como Aro y Osa están conectadas entre sí en ambas direcciones). Todas estas conexiones entre las N plazas están recogidas en un callejero, representado por una matriz de adyacencia de tamaño NxN; así, el valor de Callejero[p, q] indica si se puede ir de la plaza p a la plaza q. Se acerca el día 26 de Abril, festividad de San Isidoro de Sevilla (patrón de las Letras y, casualmente, de los informáticos), y en el Ayuntamiento de Abecelandia han decidido
+que para celebrarlo van a invertir la dirección de todas las calles que conectan sus plazas.
+En ese día no se podrá circular de Aro a Ruido, pero sí se permitirá ir de Ruido a Aro; obviamente, Aro y Osa seguirán conectadas entre sí. Diseñar formalmente un algoritmo Divide y Vencerás estándar que, teniendo por dato el callejero de la ciudad (representado por la matriz de adyacencia), obtenga el nuevo callejero válido para el día de San Isidoro de Sevilla, indicando las estructuras de datos que se utilicen.
+
+La forma de repesentar las conexiones entre las distintas plazas se puede realizar con una matriz de adyacencia, donde la fila i y la columna j, tal que i = j, corresponden a una plaza, en caso de que haya una conexión se representa con un 1, sino es un 0. 
+
+Por ejemplo para el siguiente grafo su matriz de adyacencia sería:
+
+![image](https://github.com/MarcosFP812/PEC1-Algoritmia/assets/124279256/d5420eb2-2d21-44ba-97ac-22fcda0cf0ff)
+
+|       | RUIDO | ORO  | OSA  | ARO   |
+|-------|-------|------|------|-------|
+| RUIDO | 0     | 1    | 1    | 0     |
+| ORO   | 0     | 1    | 1    | 0     |
+| OSA   | 0     | 0    | 0    | 1     |
+| ARO   | 0     | 1    | 1    | 0     |
+
+Ahora como se muestra en el enunciado invertimos las clases quedando de la siguiente forma
+
+![image](https://github.com/MarcosFP812/PEC1-Algoritmia/assets/124279256/25373354-5002-44c1-9e2f-096aad56e987)
+
+|       | RUIDO | ORO  | OSA  | ARO   |
+|-------|-------|------|------|-------|
+| RUIDO | 0     | 0    | 0    | 0     |
+| ORO   | 1     | 1    | 0    | 1     |
+| OSA   | 1     | 1    | 0    | 1     |
+| ARO   | 0     | 0    | 1    | 0     |
+
+Si nos fijamos atentamente la operación que se está realizando sobre la matriz es una transposición, esto consiste en cambiar las posiciones [i,j] por las posiciones [j,i]. Así pues para abordar la transposición de una matriz desde un enfoque divide y vencerás separaremos la matriz en 4 cuadrantes iguales en cada iteración (vease que la matriz debe ser cuadrada y de $2^nx2^n$), tantas veces como se necesarias, para después transponer esas submatrices y unirlas. De la siguiente manera:
+
+| 0     | 0    | 0    | 0     |
+|-------|------|------|-------|
+| 1     | 1    | 0    | 1     |
+| 1     | 1    | 0    | 1     |
+| 0     | 0    | 1    | 0     |
+
+Dividimos en cuadrantes:
+
+| 0  | 0  |
+|----|----|
+| 1  | 1  |
+
+| 0  | 0  |
+|----|----|
+| 0  | 1  |
+
+| 1  | 1  |
+|----|----|
+| 0  | 0  |
+
+| 0  | 1  |
+|----|----|
+| 1  | 0  |
+
+Transponemos las submatrices:
+
+| 0  | 1  |
+|----|----|
+| 0  | 1  |
+
+| 0  | 0  |
+|----|----|
+| 0  | 1  |
+
+| 1  | 0  |
+|----|----|
+| 1  | 0  |
+
+| 0  | 1  |
+|----|----|
+| 1  | 0  |
+
+
+Ahora unimos las submatrices transponiendolas:
+
+| 0     | 1    | 1    | 0     |
+|-------|------|------|-------|
+| 0     | 1    | 1    | 0     |
+| 0     | 0    | 0    | 1     |
+| 0     | 1    | 1    | 0     |
+
+El código proporcionado para resolver el problema es el siguiente:
+
+```python= 
+def transponer_matriz(matriz: list[list[int]]) -> list[list[int]]:
+    #condicion de parada
+    if len(matriz) == 1:
+        return matriz
+    else:
+        submat = dividir_cuadrantes(matriz)
+
+        for i in range(4):
+            submat[i] = transponer_matriz(submat[i])
+
+        # Unir las submatrices transpuestas
+        return unir_cuadrantes([submat[0], submat[2], submat[1], submat[3]])
+
+def unir_cuadrantes(submatrices):
+    longitud = int(len(submatrices[0])*2)
+    punto_medio = int(longitud/2)
+    matriz = iniciar_matrizN(longitud)
+
+    for i in range(0, longitud):
+        for j in range(0, longitud):
+            if i<punto_medio and j<punto_medio:
+                matriz[i][j] = submatrices[0][i][j] 
+            elif i<punto_medio and j>=punto_medio:
+                matriz[i][j] = submatrices[1][i][j-punto_medio] 
+            elif i>=punto_medio and j<punto_medio:
+                matriz[i][j] = submatrices[2][i-punto_medio][j]
+            elif i>=punto_medio and j>=punto_medio:
+                matriz[i][j] = submatrices[3][i-punto_medio][j-punto_medio]
+    return matriz
+
+def dividir_cuadrantes(matriz: list[list[int]]) -> list:
+    punto_medio = int(len(matriz)/2)
+    division = [iniciar_matrizN(punto_medio), iniciar_matrizN(punto_medio), iniciar_matrizN(punto_medio), iniciar_matrizN(punto_medio)]
+
+    for i in range(0, len(matriz)):
+        for j in range(0, len(matriz)):
+            if i<punto_medio and j<punto_medio:
+                division[0][i][j] = matriz[i][j]
+            elif i<punto_medio and j>=punto_medio:
+                division[1][i][j-punto_medio] = matriz[i][j]
+            elif i>=punto_medio and j<punto_medio:
+                division[2][i-punto_medio][j] = matriz[i][j]
+            elif i>=punto_medio and j>=punto_medio:
+                division[3][i-punto_medio][j-punto_medio] = matriz[i][j]
+    return division 
+
+def iniciar_matrizN(n:int) ->  list[list[int]]:
+    matriz = []
+    for i in range(0, n):
+        matriz.append([])
+        for j in range(0, n):  
+            matriz[i].append(0)
+    return matriz
+
+```
+
+Como se observa la solución es muy simple, solamente debemos de crear funciones que inicien una matriz de dimensiones deseadas, una que una los cuadrantes y otra que los divida. Con estas funciones podemos hacer el algoritmo DYV, la condición de parada será que la matriz sea 1x1 para que ocupe menos lineas de código (se podría parar en las 2x2 y devolver la matriz transpuesta), en caso de ser una matriz de tamaño menor la dividiremos y llamaremos a la función con cada una de las submatrices, una vez que termine las llamadas se unirán las matrices pero transponiendolas.
+
+
+
