@@ -8,10 +8,11 @@ def main(argv):
     except ValueError:
         print("Introduce un numero porfavor")
     except IndexError:
-        print("Introduce el numero porfavor")
+        print("Introduce el numero deseado en la ejecución del comando porfavor")
 
-if __name__ == "__main__":                                                      # Si este modulo es el principal 
+if __name__ == "__main__":
     if "--test" in sys.argv:
         import doctest
-        doctest.testsuma()
-    main(sys.argv)     
+        doctest.test()
+    else:
+        main(sys.argv)     
