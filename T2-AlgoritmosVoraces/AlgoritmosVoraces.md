@@ -228,7 +228,55 @@ Una vez vistas estas funciones podemos entrar en la **`dijkstra_voraz(self, inic
 La complejidad total del algoritmo será $O(n^3)$, puesto que la función de selección es $O(n^2)$ la cual está dentro de un bucle while.
 
 
+### Escaleras
 
+Shrek, Asno y Dragona llegan a los pies del altísimo castillo de Lord Farquaad para liberar a Fiona de su encierro. Como sospechaban que el puente levadizo estaría vigilado por numerosos soldados se han traído muchas escaleras, de distintas alturas, con la esperanza
+de que alguna de ellas les permita superar la muralla; pero ninguna escalera les sirve porque la muralla es muy alta. Shrek se da cuenta de que, si pudiese combinar todas las escaleras en una sola, conseguiría llegar exactamente a la parte de arriba y poder entrar al
+castillo.
+
+Afortunadamente las escaleras son de hierro, así que con la ayuda de Dragona van a “soldarlas”. Dragona puede soldar dos escaleras cualesquiera con su aliento de fuego, pero tarda en calentar los extremos tantos minutos como metros suman las escaleras a soldar. Por ejemplo, en soldar dos escaleras de 6 y 8 metros tardaría 6 + 8 = 14 minutos. Si a esta escalera se le soldase después una de 7 metros, el nuevo tiempo sería 14 + 7 = 21 minutos, por lo que habrían tardado en hacer la escalera completa un total de 14 + 21 = 35 minutos.
+Diseñar un algoritmo eficiente que encuentre el mejor coste y manera de soldar las escaleras para que Shrek tarde lo menos posible es escalar la muralla, indicando las estructuras de datos elegidas y su forma de uso. Se puede suponer que se dispone exactamente de las escaleras necesarias para subir a la muralla (ni sobran ni faltan), es decir, que el dato del problema es la colección de medidas de las “miniescaleras” (en la estructura de datos que se elija), y que solo se busca la forma óptima de fundir las escaleras.
+
+En este caso el algoritmo voraz consiste en seleccionar la mejor escalera primero hasta que no queden más, importante recalcar que el conjunto de candidatos es exactamente la altura que queremos obtener, en caso de lo contrario está solución discreparia según diferentes casos. 
+
+Para la función de selección hay dos posibilidades, elegir la más alta o la más baja de los candidatos. No es complicado razonar que si las que primero se escojan serán las que más se repitan, conviene seleccionar la más baja primero ya que aportará menos al tiempo total (lo cual queremos minimizar).
+
+De manera similar al ejercicio de los ficheros se hace posteriormente el calculo del tiempo total.
+
+Por lo que la función de selección es la siguiente:
+
+```python
+def mejor_escalera(lista):
+    menor = lista[0]
+    for elem in lista[1:]:
+        if elem > menor:
+            menor = elem
+    return menor
+```
+
+Y la función principal queda de esta manera:
+
+```python
+def seleccionar_escaleras(c, altura, mejor_escalera):
+    solucion = []
+    candidatos = c[:]
+    altura_actual = 0
+    tiempo_total = 0
+
+    while (altura > altura_actual and len(candidatos)):
+        mejor = mejor_escalera(candidatos)
+
+        solucion.append(mejor)
+        candidatos.remove(mejor)
+
+        altura_actual += mejor
+
+        for elem in solucion:
+            tiempo_total += elem
+    return tiempo_total
+```
+
+En cuanto a la complejidad, para calcular el mejor será $0(n)$ por ser un bucle for, el cual está dentro del bucle voraz así que la complejidad será de $0(n^2)$. Se podría mejorar haciendo uso de un algoritmo de ordenación quicksort.
 
 
 
