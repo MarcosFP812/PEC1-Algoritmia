@@ -117,8 +117,14 @@ La raíz es x = 1. Por lo que:
 $x^{(H)} = A$
 
 Ecuación particular:
-$x^{(P)} = x^n - x^{n-1} = 1 = x^{n-1}(x-1)$
+$x^{(P)} = x^n - x^{n-1} = 1$
 
+$x^{(P)} = nB$
+
+$x = A + nB$
+
+Por lo que la complejidad será
+$O(n)$
 
 
 
